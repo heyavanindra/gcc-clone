@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root:has(.no-doc-scroll) {
+    overflow:hidden;
+  } 
+
+  body{
+    font-family: 'Fanwood Text', serif;
+  }
+
+  @keyframes scaleAnimation {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2); /* Adjust the scaling factor as needed */
+    }
+  }
+  
+  .animate-scale {
+    animation: scaleAnimation 1s infinite;
+  }
+  
+
+.animated-underline {
+    position: relative;
+    cursor: pointer;
+}
+
+.animated-underline::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 1px;
+    bottom: 60px;
+    left: 0;
+    background-color: black;
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+
+.underline-black::after {
+    background-color: black;
+  }
+
+.animated-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.scrollbar-hide {
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+

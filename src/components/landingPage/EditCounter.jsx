@@ -1,0 +1,71 @@
+"use client";
+import React, { useState, useEffect } from "react";
+import { useSession } from 'next-auth/react';
+import GeneralForm from "../GeneralForm";
+import { decode } from 'jsonwebtoken';
+
+const EditCounter = ({ item, api }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [token, setToken] = useState(null);
+
+  const initialData = {
+    title: item.title,
+    count: item.count
+  };
+
+  const { data } = useSession();
+
+    useEffect(() => {
+        if (data) {
+            setToken(data.user.accessToken);
+        }
+    }, [data]);
+
+  useEffect(() => {
+    if (token) {
+        try {
+            const decodedToken = decode(token);
+            if (decodedToken.exp * 1000 > Date.now()) {
+                setIsAdmin(decodedToken.isAdmin);
+            } 
+        } catch (error) {
+            console.error("Invalid token:", error);
+        }
+    } else {
+        setIsAdmin(false);
+    }
+}, [token]);
+
+  const handleEditClick = () => {
+    setIsEditing(!isEditing);
+  };
+
+  return (
+    <>
+    {isAdmin && <div>
+      <button
+        className="absolute top-0 right-[120%] bg-black text-white py-1 px-3"
+        onClick={handleEditClick}
+      >
+        Edit
+      </button>
+      {isEditing && (
+        <GeneralForm
+        api={`${api}/${item._id}`}
+        initialData={initialData}
+        onClose={handleEditClick}
+    />
+      )}
+    </div>}
+    </>
+  );
+};
+
+export default EditCounter;
+
+
+
+
+
+
